@@ -1,0 +1,11 @@
+{
+  "lambda": {
+    "role": "choozago-executor",
+    "name": "choozago",
+    "region": "ap-northeast-1"
+  },
+  "api": {
+    "id": "i4yh2sd3k3",
+    "module": "bot"
+  }
+}

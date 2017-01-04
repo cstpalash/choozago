@@ -1,0 +1,28 @@
+{
+	"rbs-india" : [
+		{
+			"code": "ggn-infospace",
+			"name": "Gurgaon-Infospace",
+			"pic" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace.png",
+			"booked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-booked.png",
+			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-parked.png",
+			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-exited.png"
+		},
+		{
+			"code": "ggn-7b",
+			"name": "Gurgaon-7B",
+			"pic" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b.png",
+			"booked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-booked.png",
+			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-parked.png",
+			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-exited.png"
+		},
+		{
+			"code": "del-sp",
+			"name": "Delhi-ShastriPark",
+			"pic" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp.png",
+			"booked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-booked.png",
+			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-parked.png",
+			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-exited.png"
+		}
+	]
+}

@@ -31,8 +31,14 @@ function book(user){
 			userid : user.userid,
 			time : now.unix(),
 			expiry : expiry.unix(),
-			status : status
+			status : status,
+			company : user.company,
+			locationCode : loc.code,
+			locationDesc : loc.name
 		};
+		if(user.firstName) ticketData.firstName = user.firstName;
+		if(user.lastName) ticketData.lastName = user.lastName;
+		if(user.profilePic) ticketData.profilePic = user.profilePic;
 
 		var params = {};
 	    params.TableName = ticketTableName;

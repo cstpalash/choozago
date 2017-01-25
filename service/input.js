@@ -51,6 +51,11 @@ function parseInput(request){
 			cmd.data = { location : payload.split('|')[1] }
 		}
 
+		if(payload.startsWith("#qrcode|")){
+			cmd.type = "qrcode";
+			cmd.data = { ticketId : payload.split('|')[1] }
+		}
+
 		if(payload == "#changelocation"){
 			cmd.type = "changelocation";
 		}

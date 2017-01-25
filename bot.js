@@ -48,6 +48,9 @@ module.exports = botBuilder(function (request, apiReq) {
               case "book":
                 return ticket.book(user);
                 break;
+              case "qrcode":
+                return ticket.qrcode(user, parsedInput.command.data.ticketId);
+                break;
               case "show":
                 return ticket.show(user);
                 break;

@@ -7,7 +7,8 @@
 			"booked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-booked.png",
 			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-parked.png",
 			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-exited.png",
-			"ticketExpiryInHours" : 2
+			"ticketExpiryInHours" : 2,
+			"ticketAutoExitInHours" : 8
 		},
 		{
 			"code": "ggn-7b",
@@ -16,7 +17,8 @@
 			"booked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-booked.png",
 			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-parked.png",
 			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-exited.png",
-			"ticketExpiryInHours" : 2
+			"ticketExpiryInHours" : 2,
+			"ticketAutoExitInHours" : 8
 		},
 		{
 			"code": "del-sp",
@@ -25,7 +27,8 @@
 			"booked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-booked.png",
 			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-parked.png",
 			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-exited.png",
-			"ticketExpiryInHours" : 2
+			"ticketExpiryInHours" : 2,
+			"ticketAutoExitInHours" : 8
 		}
 	]
 }

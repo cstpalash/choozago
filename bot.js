@@ -54,11 +54,8 @@ module.exports = botBuilder(function (request, apiReq) {
               case "show":
                 return ticket.show(user);
                 break;
-              case "park":
-                return ticket.park(user);
-                break;
               case "exit":
-                return ticket.exit(user);
+                return ticket.exit(user, parsedInput.command.data.ticketId);
                 break;
               default:
                 return template.getGeneric(user.company, user.location);

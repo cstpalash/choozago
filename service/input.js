@@ -56,6 +56,11 @@ function parseInput(request){
 			cmd.data = { ticketId : payload.split('|')[1] }
 		}
 
+		if(payload.startsWith("#exit|")){
+			cmd.type = "exit";
+			cmd.data = { ticketId : payload.split('|')[1] }
+		}
+
 		if(payload == "#changelocation"){
 			cmd.type = "changelocation";
 		}
@@ -66,14 +71,6 @@ function parseInput(request){
 
 		if(payload == "#show"){
 			cmd.type = "show";
-		}
-
-		if(payload == "#park"){
-			cmd.type = "park";
-		}
-
-		if(payload == "#exit"){
-			cmd.type = "exit";
 		}
 
 		if(payload == "#start"){

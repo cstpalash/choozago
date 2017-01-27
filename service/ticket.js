@@ -15,6 +15,16 @@ var AWS = require('aws-sdk');
 var s3 = Promise.promisifyAll(new AWS.S3());
 var ticketBucketName = "choozago.ticket";
 
+function updateTicket(ticketData){
+	var paramsDynamo = {};
+    paramsDynamo.TableName = ticketTableName;
+    paramsDynamo.Item = ticketData;
+
+    return dynamo.putItemAsync(paramsDynamo).then(function(dataDb){
+    	return dataDb;
+    });
+}
+
 function book(user){
 	const generic = new fbTemplate.Generic();
 	
@@ -40,11 +50,7 @@ function book(user){
 		if(user.lastName) ticketData.lastName = user.lastName;
 		if(user.profilePic) ticketData.profilePic = user.profilePic;
 
-		var params = {};
-	    params.TableName = ticketTableName;
-	    params.Item = ticketData;
-
-	    return dynamo.putItemAsync(params).then(function(data){
+	    return updateTicket(ticketData).then(function(data){
 	    	var ticketTitle = "Expires : " + expiry.format(genericConfig.dateDisplayFormat);
 		
 
@@ -101,11 +107,7 @@ function qrcode(user, ticketId){
     		return s3.uploadAsync(s3Params).then(function(dataS3) {
 			  	data.Item.qrurl = dataS3.Location;
 
-			  	var paramsDynamo = {};
-			    paramsDynamo.TableName = ticketTableName;
-			    paramsDynamo.Item = data.Item;
-
-			    return dynamo.putItemAsync(paramsDynamo).then(function(dataDb){
+			    return updateTicket(data.Item).then(function(dataDb){
 			    	return new fbTemplate
 				      .Image(dataS3.Location)
 				      .get();
@@ -115,60 +117,57 @@ function qrcode(user, ticketId){
     });
 }
 
-function park(user){
-	const generic = new fbTemplate.Generic();
+function exit(user, ticketId){
 
-	var loc = _.find(location.getLocations(user.company), function(l) { return l.code == user.location; });
-	if(loc){
-		var ticketTitle = "(B1-A208) Expires : 10:05AM, 5th Jan 2017";
-		
+	var params = {};
+    params.TableName = ticketTableName;
+    params.Key = {ticketid : ticketId};
 
-		var ticketDesc = "{status} by {firstName} {lastName} on 09:50AM, 5th Jan 2017";
-		ticketDesc = ticketDesc.replace("{status}", "Parked")
-								.replace("{firstName}", user.firstName)
-								.replace("{lastName}", user.lastName);
+    var now = moment().utcOffset("+05:30"); //Indian time NOW
 
+    return dynamo.getItemAsync(params).then(function(data){
+    	if(data.Item && data.Item.status == "parked"){
 
-		var image = loc.parked;
+    		var ticket = data.Item;
+    		ticket.status = "exited";
+    		ticket.exitedtime = now.unix();
 
-		generic
-			.addBubble(format(ticketTitle), format(ticketDesc))
-			.addImage(image)
-			.addButton('Exit my vehicle', '#exit');
+    		return updateTicket(ticket).then(function(updatedTicket){
+    			const generic = new fbTemplate.Generic();
 
-		return generic.get();
-	}
-	else{
-		return "Something went wrong, please try again."
-	}
-}
+	    		var loc = _.find(location.getLocations(ticket.company), function(l) { return l.code == ticket.locationCode; });
+				if(loc){
+					var ticketTitle = "Exited : Slot will be released. Thank you.";
+			
 
-function exit(user){
-	const generic = new fbTemplate.Generic();
-
-	var loc = _.find(location.getLocations(user.company), function(l) { return l.code == user.location; });
-	if(loc){
-		var ticketTitle = "(B1-A208) Exited : Slot will be released. Thank you.";
-		
-
-		var ticketDesc = "{status} by {firstName} {lastName} on 05:00PM, 5th Jan 2017";
-		ticketDesc = ticketDesc.replace("{status}", "Parked")
-								.replace("{firstName}", user.firstName)
-								.replace("{lastName}", user.lastName);
+					var ticketDesc = "{status} by {firstName} {lastName} on " + now.format(genericConfig.dateDisplayFormat);
+					ticketDesc = ticketDesc.replace("{status}", "Exited")
+											.replace("{firstName}", ticket.firstName)
+											.replace("{lastName}", ticket.lastName);
 
 
-		var image = loc.exited;
+					var image = loc.exited;
 
-		generic
-			.addBubble(format(ticketTitle), format(ticketDesc))
-			.addImage(image)
-			.addButton('Book again', '#start');
+					generic
+						.addBubble(format(ticketTitle), format(ticketDesc))
+						.addImage(image)
+						.addButton('Book again', '#start');
 
-		return generic.get();
-	}
-	else{
-		return "Something went wrong, please try again."
-	}
+					return generic.get();
+
+				}
+				else{
+					return "Something went wrong, please try again."
+				}
+
+    		});
+
+    		
+    	}
+    	else{
+    		return "Can't exit your ticket, only 'parked' ticket can be exited."
+    	}
+    });
 }
 
 module.exports = {
@@ -178,11 +177,8 @@ module.exports = {
   qrcode(user, ticketId) {
     return qrcode(user, ticketId);
   },
-  park(user){
-  	return park(user);
-  },
-  exit(user){
-  	return exit(user);
+  exit(user, ticketId){
+  	return exit(user, ticketId);
   },
   show(user) {
     return book(user);

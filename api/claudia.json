@@ -1,0 +1,7 @@
+{
+  "lambda": {
+    "role": "choozago-api-executor",
+    "name": "choozago-api",
+    "region": "ap-northeast-1"
+  }
+}

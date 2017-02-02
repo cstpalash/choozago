@@ -1,0 +1,25 @@
+{
+  "name": "choozago",
+  "version": "1.0.0",
+  "description": "An app which helps in office transport",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Palash Roy",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.9.0",
+    "bluebird": "^3.4.7",
+    "claudia-bot-builder": "^2.10.0",
+    "dynamodb-doc": "^1.0.0",
+    "email-validator": "^1.0.7",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "huh": "^2.0.1",
+    "lodash": "^4.17.4",
+    "moment": "^2.17.1",
+    "qr-image": "^3.2.0",
+    "uuid": "^3.0.1"
+  }
+}

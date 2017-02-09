@@ -11,6 +11,7 @@ var Promise = require('bluebird');
 var doc = require('dynamodb-doc');
 var dynamo = Promise.promisifyAll(new doc.DynamoDB());
 var ticketTableName = "choozago.ticket";
+var userTimeIndex ="userid-time-index";
 var AWS = require('aws-sdk');
 var s3 = Promise.promisifyAll(new AWS.S3());
 var ticketBucketName = "choozago.ticket";
@@ -25,56 +26,112 @@ function updateTicket(ticketData){
     });
 }
 
+function getUserLastTicket(user){
+	
+   var params = {
+        TableName : ticketTableName,
+        IndexName :	userTimeIndex,
+        KeyConditionExpression: "userid = :uid and #btime >= :bt" ,
+         ExpressionAttributeNames: {
+            "#btime":"time",
+        },
+        ExpressionAttributeValues: {
+            ":uid":user.userid,
+            ":bt": moment().utcOffset("+05:30").startOf('day').unix()
+        },
+        Limit:1,
+        ScanIndexForward: false
+    };
+	
+	return dynamo.queryAsync(params).then(function(dataDb){
+			
+			console.log("getUserLastTicket return data" + dataDb );
+			console.log(dataDb)
+			if (dataDb && dataDb.Items.length > 0) {
+				
+				return dataDb.Items[0];
+			}
+    	return null;
+    });
+}
+
+function getBookedTicketCard(ticketData){
+	
+	const generic = new fbTemplate.Generic();
+	var ticketTitle = "Expires : " + moment.unix(ticketData.expiry).utcOffset("+05:30").format(genericConfig.dateDisplayFormat);
+			
+	var bookParkTime = moment.unix((ticketData.status == "booked")? ticketData.time : ticketData.parkedtime).utcOffset("+05:30");
+	var ticketDesc =  (ticketData.isAlreadyBooked || ticketData.isAlreadyParked) ? "Already " : ""
+				ticketDesc = ticketDesc + "{status} by {firstName} {lastName} on " + bookParkTime.format(genericConfig.dateDisplayFormat);
+				ticketDesc = ticketDesc.replace("{status}", ticketData.status)
+										.replace("{firstName}", ticketData.firstName)
+										.replace("{lastName}", ticketData.lastName);
+	
+	var loc = _.find(location.getLocations(ticketData.company), function(l) { return l.code == ticketData.locationCode; });
+	var image = (ticketData.status == "booked")?loc.booked :loc.parked;
+	
+	generic
+		.addBubble(format(ticketTitle), format(ticketDesc))
+		.addImage(image)
+		
+	if ((ticketData.status == "booked")) {
+		generic
+			.addButton('Show QR code', '#qrcode|' + ticketData.ticketid)
+			.addButton('Cancel ticket', '#cancel|' + ticketData.ticketid);
+	}
+	
+	return generic.get();
+	
+}
+
+
+
 function book(user){
 	const generic = new fbTemplate.Generic();
 	
-
-	var loc = _.find(location.getLocations(user.company), function(l) { return l.code == user.location; });
-	if(loc){
-		var now = moment().utcOffset("+05:30"); //Indian time NOW
-		var expiry = now.clone().add(loc.ticketExpiryInHours, 'h');
-		var ticketId = uuidV1();
-		var status = "booked";
-
-		var ticketData = {
-			ticketid : ticketId,
-			userid : user.userid,
-			time : now.unix(),
-			expiry : expiry.unix(),
-			status : status,
-			company : user.company,
-			locationCode : loc.code,
-			locationDesc : loc.name
-		};
-		if(user.firstName) ticketData.firstName = user.firstName;
-		if(user.lastName) ticketData.lastName = user.lastName;
-		if(user.profilePic) ticketData.profilePic = user.profilePic;
-
-	    return updateTicket(ticketData).then(function(data){
-	    	var ticketTitle = "Expires : " + expiry.format(genericConfig.dateDisplayFormat);
+	return getUserLastTicket(user).then(function(data) {
 		
-
-			var ticketDesc = "{status} by {firstName} {lastName} on " + now.format(genericConfig.dateDisplayFormat);
-			ticketDesc = ticketDesc.replace("{status}", status)
-									.replace("{firstName}", user.firstName)
-									.replace("{lastName}", user.lastName);
-
-
-			var image = loc.booked;
-
-			generic
-				.addBubble(format(ticketTitle), format(ticketDesc))
-				.addImage(image)
-				.addButton('Show QR code', '#qrcode|' + ticketId)
-		    	.addButton('Cancel ticket', '#cancel|' + ticketId);
-
-			return generic.get();
-	    });
-		
-	}
-	else{
-		return "Something went wrong, please try again."
-	}
+		if (data && (data.status == "booked" || data.status == "parked" ) ) {
+			
+			data.isAlreadyBooked = data.status == "booked";
+			data.isAlreadyParked = data.status == "parked";
+			return getBookedTicketCard(data);
+		}
+	
+		var loc = _.find(location.getLocations(user.company), function(l) { return l.code == user.location; });
+		if(loc){
+			var now = moment().utcOffset("+05:30"); //Indian time NOW
+			var expiry = now.clone().add(loc.ticketExpiryInHours, 'h');
+			var ticketId = uuidV1();
+			var status = "booked";
+	
+			var ticketData = {
+				ticketid : ticketId,
+				userid : user.userid,
+				time : now.unix(),
+				expiry : expiry.unix(),
+				status : status,
+				company : user.company,
+				locationCode : loc.code,
+				locationDesc : loc.name
+			};
+			if(user.firstName) ticketData.firstName = user.firstName;
+			if(user.lastName) ticketData.lastName = user.lastName;
+			if(user.profilePic) ticketData.profilePic = user.profilePic;
+	
+		    return updateTicket(ticketData).then(function(data){
+		    	
+		    	return getBookedTicketCard(ticketData);
+		   
+		    });
+			
+		}
+		else{
+			return "Something went wrong, please try again."
+		}
+	
+	})
+	
 }
 
 function qrcode(user, ticketId){

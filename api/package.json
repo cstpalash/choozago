@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test-getTicket": "claudia test-lambda --event testData/getTicket.json",
-    "test-parkTicket": "claudia test-lambda --event testData/parkTicket.json"
+    "test-parkTicket": "claudia test-lambda --event testData/parkTicket.json",
+    "test-updateConfig": "claudia test-lambda --event testData/updateSlotConfig.json",
+    "test-deleteConfig": "claudia test-lambda --event testData/deleteSlotConfig.json",
+    "test-getConfig": "claudia test-lambda --event testData/getSlotConfig.json"
   },
   "repository": {
     "type": "git",

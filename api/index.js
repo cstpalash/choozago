@@ -7,6 +7,7 @@ var botBuilder = require('claudia-bot-builder'),
     fbTemplate = botBuilder.fbTemplate;
 var genericConfig = require("./config/generic");
 var companyLocations = require("./config/companyLocations");
+var configService = require("./service/configuration");
 var moment = require('moment');
 var Promise = require('bluebird');
 var doc = require('dynamodb-doc');
@@ -17,6 +18,21 @@ exports.handler = function (event, context) {
 	var now = moment().utcOffset("+05:30"); //Indian time NOW
 	const generic = new fbTemplate.Generic();
 	switch(event.action){
+		case "updateSlotConfiguration" : 
+			configService.updateConfiguration(event.data).then(function(data){
+				context.succeed(data);
+			});
+			break;
+		case "deleteSlotConfiguration" : 
+			configService.deleteConfiguration(event.data).then(function(data){
+				context.succeed(data);
+			});
+			break;
+		case "getSlotConfiguration" : 
+			configService.getSlotConfiguration(event.data).then(function(data){
+				context.succeed(data);
+			});
+			break;
 		case "getTicket" : 
 			getTicketStatus(event.data.ticketId).then(function(ticket){
 				context.succeed(ticket);

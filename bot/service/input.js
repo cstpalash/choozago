@@ -56,7 +56,7 @@ function parseInput(request){
 			cmd.data = { ticketId : payload.split('|')[1] }
 		}
 
-		if(payload.startsWith("|")){
+		if(payload.startsWith("#exit|")){
 			cmd.type = "exit";
 			cmd.data = { ticketId : payload.split('|')[1] }
 		}

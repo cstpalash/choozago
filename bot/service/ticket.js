@@ -84,7 +84,85 @@ function getBookedTicketCard(ticketData){
 	
 }
 
+function getTicketCard(ticketData){
+	
+	const generic = new fbTemplate.Generic();
+	
+	var loc = _.find(location.getLocations(ticketData.company), function(l) { return l.code == ticketData.locationCode; });
+	var image = (ticketData.status == "booked")?loc.booked :loc.parked;
+	
+	var ticketTitle = ""
+	var ticketDesc = ""
+	var ticketTime = ""
+	
+	switch(ticketData.status)
+	{
+		case "expired" : 
+			ticketTime = moment.unix(ticketData.expiry).utcOffset("+05:30").format(genericConfig.dateDisplayFormat);
+			ticketTitle = "Expired : " + ticketTime
+			image = loc.expired;
+			break;
+		case "booked" :
+			ticketTime = moment.unix(ticketData.time).utcOffset("+05:30").format(genericConfig.dateDisplayFormat);
+			ticketTitle = "Expires : " + moment.unix(ticketData.expiry).utcOffset("+05:30").format(genericConfig.dateDisplayFormat);
+			image = loc.booked;
+			break;
+		case "cancelled" : 
+			ticketTime = moment.unix(ticketData.cancelledtime).utcOffset("+05:30").format(genericConfig.dateDisplayFormat);
+			ticketTitle = "Cancelled : " + ticketTime;
+			image = loc.cancelled;
+			break;
+		case "exited" :
+			ticketTime = moment.unix(ticketData.exitedtime).utcOffset("+05:30").format(genericConfig.dateDisplayFormat);
+			ticketTitle = "Exited : " + ticketTime;
+			image = loc.exited;
+			break;
+		case "parked" : 
+			ticketTime = moment.unix(ticketData.parkedtime).utcOffset("+05:30").format(genericConfig.dateDisplayFormat);
+			ticketTitle = "Auto exit : " + moment.unix(ticketData.parkedtime).utcOffset("+05:30").clone().add(loc.ticketAutoExitInHours, 'h').format(genericConfig.dateDisplayFormat);
+			image = loc.parked;
+			break;
+	}
+	
+	var ticketDesc =  ticketDesc + "{status} by {firstName} {lastName} on " + ticketTime;
+	ticketDesc = ticketDesc.replace("{status}", ticketData.status)
+										.replace("{firstName}", ticketData.firstName)
+										.replace("{lastName}", ticketData.lastName);
+	
+	generic
+		.addBubble(format(ticketTitle), format(ticketDesc))
+		.addImage(image)
+		
+	if ((ticketData.status == "booked")) {
+		generic
+			.addButton('Show QR code', '#qrcode|' + ticketData.ticketid)
+			.addButton('Cancel ticket', '#cancel|' + ticketData.ticketid);
+	}
+	else if ((ticketData.status == "parked")) {
+		generic
+			.addButton('Exit ticket', '#exit|' + ticketData.ticketid);
+	}
+	
+	return generic.get();
+	
+}
 
+function show(user){
+	const generic = new fbTemplate.Generic();
+	
+	return getUserLastTicket(user).then(function(data) {
+		
+		if (data) {
+			
+			return getTicketCard(data);
+		}
+		else{
+			return "You have not booked any ticket yet."
+		}
+	
+	})
+	
+}
 
 function book(user){
 	const generic = new fbTemplate.Generic();
@@ -294,6 +372,6 @@ module.exports = {
   	return cancel(user, ticketId);
   },
   show(user) {
-    return book(user);
+    return show(user);
   }
 }

@@ -32,7 +32,7 @@ function getGeneric(company, locationCode){
 		.addBubble(format(locDesc), format("Parking available : " + availableParking))
 		.addImage(image)
 		.addButton('Book my ticket', '#book')
-    .addButton('Show my ticket', '#show')
+    .addButton('My last ticket', '#show')
 		.addButton('Change location', '#changelocation');
 
 	return generic.get();

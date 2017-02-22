@@ -1,0 +1,56 @@
+{
+    "Records" : [
+    {
+        "eventID": "c5b0fa18a4ddf397a59f36ce493282fb",
+        "eventName": "INSERT",
+        "eventVersion": "1.1",
+        "eventSource": "aws:dynamodb",
+        "awsRegion": "ap-northeast-1",
+        "dynamodb": {
+            "ApproximateCreationDateTime": 1487671140,
+            "Keys": {
+                "ticketid": {
+                    "S": "63f40cd0-f81c-11e6-9645-83879686b211"
+                }
+            },
+            "NewImage": {
+                "firstName": {
+                    "S": "Palash"
+                },
+                "lastName": {
+                    "S": "Roy"
+                },
+                "profilePic": {
+                    "S": "https://scontent.xx.fbcdn.net/v/t1.0-1/12963383_10153515595227546_5004710512269491331_n.jpg?oh=617b75a234afd2a0221b94ed7b5f71ce&oe=5942CC61"
+                },
+                "locationDesc": {
+                    "S": "Gurgaon-7B"
+                },
+                "company": {
+                    "S": "rbs-india"
+                },
+                "expiry": {
+                    "N": "1487678350"
+                },
+                "time": {
+                    "N": "1487671150"
+                },
+                "locationCode": {
+                    "S": "ggn-7b"
+                },
+                "userid": {
+                    "S": "996097347161884"
+                },
+                "ticketid": {
+                    "S": "63f40cd0-f81c-11e6-9645-83879686b211"
+                },
+                "status": {
+                    "S": "booked"
+                }
+            },
+            "SequenceNumber": "125272900000000000140351990",
+            "SizeBytes": 374,
+            "StreamViewType": "NEW_AND_OLD_IMAGES"
+        }
+    ]
+}

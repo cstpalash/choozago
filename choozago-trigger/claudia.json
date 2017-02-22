@@ -1,0 +1,7 @@
+{
+  "lambda": {
+    "role": "choozago-trigger-executor",
+    "name": "choozago-trigger",
+    "region": "ap-northeast-1"
+  }
+}

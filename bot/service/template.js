@@ -4,6 +4,7 @@ var format = text => (text && text.substring(0, 80));
 var companyLocations = require("../config/companyLocations");
 var _ = require('lodash');
 var location = require('./location');
+var parkingService = require('./parkingSlot');
 var moment = require('moment');
 
 function randomIntFromInterval(min,max)
@@ -26,16 +27,20 @@ function getGeneric(company, locationCode){
 		}
 	}
 
-  var availableParking = randomIntFromInterval(1,100);
-
-	generic
-		.addBubble(format(locDesc), format("Parking available : " + availableParking))
-		.addImage(image)
-		.addButton('Book my ticket', '#book')
-    .addButton('My last ticket', '#show')
-		.addButton('Change location', '#changelocation');
-
-	return generic.get();
+  return parkingService.getCurrentParkingStatus(locationCode).then(function(data){
+    
+      var availableParking = (data && data.availableSlots)?data.availableSlots :0;
+    
+    	generic
+    		.addBubble(format(locDesc), format("Parking available : " + availableParking))
+    		.addImage(image)
+    		.addButton('Book my ticket', '#book')
+        .addButton('My last ticket', '#show')
+    		.addButton('Change location', '#changelocation');
+    
+    	return generic.get();
+	
+  });
 }
 
 function getAllLocations(company){

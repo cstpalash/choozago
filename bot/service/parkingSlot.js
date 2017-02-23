@@ -3,7 +3,7 @@
 var Promise = require('bluebird');
 var doc = require('dynamodb-doc');
 var dynamo = Promise.promisifyAll(new doc.DynamoDB());
-var configService = require("./configuration");
+var configService = require('./configuration');
 var statusTableName = "choozago.status";
 var moment = require('moment');
 
@@ -19,8 +19,8 @@ function getCurrentParkingStatus(locationCode){
 	    
 	    if(dataDb.Item){
 	        
-    	    return configService.getSlotConfiguration({"locationCode":locationCode}).then(function (totalSlotsData){
-    	    
+    	   return configService.getSlotConfiguration({"locationCode":locationCode}).then(function (totalSlotsData){
+    	       
     	    var currentTotalSlots =(totalSlotsData && totalSlotsData.totalSlots)? totalSlotsData.totalSlots : null;
     	    
         	    if (currentTotalSlots) {

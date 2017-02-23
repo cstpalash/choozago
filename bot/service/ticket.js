@@ -15,6 +15,7 @@ var userTimeIndex ="userid-time-index";
 var AWS = require('aws-sdk');
 var s3 = Promise.promisifyAll(new AWS.S3());
 var ticketBucketName = "choozago.ticket";
+var parkingService = require('./parkingSlot');
 
 function updateTicket(ticketData){
 	var paramsDynamo = {};
@@ -163,51 +164,60 @@ function show(user){
 }
 
 function book(user){
-	const generic = new fbTemplate.Generic();
 	
-	return getUserLastTicket(user).then(function(data) {
+	return parkingService.getCurrentParkingStatus(user.location).then(function(data){
+    
+    	var availableParking = (data && data.availableSlots)?data.availableSlots :0;
+    	
+    	if (availableParking == 0) {
+    		
+    		return "No parkimg slot is available at the moment,Please try after sometime."
+    	}
+    	
+		const generic = new fbTemplate.Generic();
+	
+		return getUserLastTicket(user).then(function(data) {
+			
+			if (data && (data.status == "booked" || data.status == "parked" ) ) {
+				
+				data.isAlreadyBooked = data.status == "booked";
+				data.isAlreadyParked = data.status == "parked";
+				return getBookedTicketCard(data);
+			}
 		
-		if (data && (data.status == "booked" || data.status == "parked" ) ) {
-			
-			data.isAlreadyBooked = data.status == "booked";
-			data.isAlreadyParked = data.status == "parked";
-			return getBookedTicketCard(data);
-		}
-	
-		var loc = _.find(location.getLocations(user.company), function(l) { return l.code == user.location; });
-		if(loc){
-			var now = moment().utcOffset("+05:30"); //Indian time NOW
-			var expiry = now.clone().add(loc.ticketExpiryInHours, 'h');
-			var ticketId = uuidV1();
-			var status = "booked";
-	
-			var ticketData = {
-				ticketid : ticketId,
-				userid : user.userid,
-				time : now.unix(),
-				expiry : expiry.unix(),
-				status : status,
-				company : user.company,
-				locationCode : loc.code,
-				locationDesc : loc.name
-			};
-			if(user.firstName) ticketData.firstName = user.firstName;
-			if(user.lastName) ticketData.lastName = user.lastName;
-			if(user.profilePic) ticketData.profilePic = user.profilePic;
-	
-		    return updateTicket(ticketData).then(function(data){
-		    	
-		    	return getBookedTicketCard(ticketData);
-		   
-		    });
-			
-		}
-		else{
-			return "Something went wrong, please try again."
-		}
-	
-	})
-	
+			var loc = _.find(location.getLocations(user.company), function(l) { return l.code == user.location; });
+			if(loc){
+				var now = moment().utcOffset("+05:30"); //Indian time NOW
+				var expiry = now.clone().add(loc.ticketExpiryInHours, 'h');
+				var ticketId = uuidV1();
+				var status = "booked";
+		
+				var ticketData = {
+					ticketid : ticketId,
+					userid : user.userid,
+					time : now.unix(),
+					expiry : expiry.unix(),
+					status : status,
+					company : user.company,
+					locationCode : loc.code,
+					locationDesc : loc.name
+				};
+				if(user.firstName) ticketData.firstName = user.firstName;
+				if(user.lastName) ticketData.lastName = user.lastName;
+				if(user.profilePic) ticketData.profilePic = user.profilePic;
+		
+			    return updateTicket(ticketData).then(function(data){
+			    	
+			    	return getBookedTicketCard(ticketData);
+			   
+			    });
+				
+			}
+			else{
+				return "Something went wrong, please try again."
+			}
+		})
+	});
 }
 
 function qrcode(user, ticketId){
@@ -222,8 +232,6 @@ function qrcode(user, ticketId){
 			return new fbTemplate
 				.Image(data.Item.qrurl)
 				.get();
-
-    		
     	}
     	else{
     		var ctx = genericConfig.qrScanUrlTemplate.replace("{ticketId}", ticketId);

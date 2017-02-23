@@ -18,6 +18,9 @@ exports.handler = function (event, context) {
 	var now = moment().utcOffset("+05:30"); //Indian time NOW
 	const generic = new fbTemplate.Generic();
 	switch(event.action){
+		case "getUnixTimes":
+			context.succeed(configService.getUnixTimes());
+			break;
 		case "updateSlotConfiguration" : 
 			configService.updateConfiguration(event.data).then(function(data){
 				context.succeed(data);
@@ -92,6 +95,9 @@ exports.handler = function (event, context) {
 					});
 				}
 			});
+			break;
+		case "getStatus":
+			
 			break;
 		default:
 			context.fail({

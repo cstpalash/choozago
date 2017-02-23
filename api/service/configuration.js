@@ -5,28 +5,52 @@ var doc = require('dynamodb-doc');
 var dynamo = Promise.promisifyAll(new doc.DynamoDB());
 var configurationTableName = "choozago.configuration";
 var moment = require('moment');
+var defaultTimeTemplate = "2000-01-01 {time}";
+
+function getUnixTimes(){
+    var returnData = [];
+    
+    var refDate = moment("2000-01-01 00:00", "YYYY-MM-DD HH:mm");
+    
+    var minutesAdded = 0;
+    var intervalInMinutes = 15;
+    
+    while(minutesAdded < 24 * 60){
+        
+        returnData.push({ time : refDate.format("HH:mm"), unix : refDate.unix() });
+        
+        refDate.add(intervalInMinutes, "m");
+        
+        minutesAdded += intervalInMinutes;
+    }
+    
+    return returnData;
+}
 
 function getSlotConfiguration(data){
     
+    var compareTimeSegment = moment().utcOffset("+05:30").format("HH:mm");
+    if(data.time){
+        compareTimeSegment = data.time;
+    }
+    
+    var compareTime = moment(defaultTimeTemplate.replace("{time}", compareTimeSegment), "YYYY-MM-DD HH:mm").unix();
+    
     var params = {
         TableName : configurationTableName,
-        //IndexName :	userTimeIndex,
         KeyConditionExpression: "locationCode = :lcode and #btime <= :bt" ,
          ExpressionAttributeNames: {
             "#btime":"time",
         },
         ExpressionAttributeValues: {
             ":lcode":data.locationCode,
-            ":bt": data.time
+            ":bt": compareTime
             },
         Limit:1,
         ScanIndexForward: false
     };
 	
 	return dynamo.queryAsync(params).then(function(dataDb){
-	    
-	    console.log("getSlotConfiguration")
-	    console.log(dataDb)
 	    
 		if (dataDb && dataDb.Items.length > 0) {
 				
@@ -65,5 +89,8 @@ module.exports = {
   },
   getSlotConfiguration(data){
     return getSlotConfiguration(data);
+  },
+  getUnixTimes(){
+      return getUnixTimes();
   }
 }

@@ -1,13 +1,9 @@
 {
 	"action" : "updateSlotConfiguration",
 	"data" : {
-		"locationCode": "test-loc",
-		"time": 12031983,
-		"totalSlots": 100,
-		"company":"test-company",
-		"createdBy": "Test-User-2",
-		"updatedBy": "Test-User-2",
-		"createdAt": 100,
-		"updatedAt": 200
+		"locationCode": "ggn-7b",
+		"time": 946735200,
+		"totalSlots": 250,
+		"company":"rbs"
 	}
 }

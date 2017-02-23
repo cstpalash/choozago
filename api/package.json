@@ -9,6 +9,7 @@
     "test-updateConfig": "claudia test-lambda --event testData/updateSlotConfig.json",
     "test-deleteConfig": "claudia test-lambda --event testData/deleteSlotConfig.json",
     "test-getConfig": "claudia test-lambda --event testData/getSlotConfig.json",
+    "test-getStatus": "claudia test-lambda --event testData/getStatus.json",
     "test-getUnixTimes": "claudia test-lambda --event testData/getUnixTimes.json"
   },
   "repository": {

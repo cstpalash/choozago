@@ -45,8 +45,6 @@ function getUserLastTicket(user){
 	
 	return dynamo.queryAsync(params).then(function(dataDb){
 			
-			console.log("getUserLastTicket return data" + dataDb );
-			console.log(dataDb)
 			if (dataDb && dataDb.Items.length > 0) {
 				
 				return dataDb.Items[0];

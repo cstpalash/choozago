@@ -8,6 +8,7 @@ var botBuilder = require('claudia-bot-builder'),
 var genericConfig = require("./config/generic");
 var companyLocations = require("./config/companyLocations");
 var configService = require("./service/configuration");
+var statusService = require("./service/status");
 var moment = require('moment');
 var Promise = require('bluebird');
 var doc = require('dynamodb-doc');
@@ -97,7 +98,9 @@ exports.handler = function (event, context) {
 			});
 			break;
 		case "getStatus":
-			
+			statusService.getCurrentParkingStatus(event.data.locationCode).then(function(data){
+				context.succeed(data);
+			});
 			break;
 		default:
 			context.fail({

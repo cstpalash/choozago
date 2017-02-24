@@ -9,7 +9,7 @@ var moment = require('moment');
 
 function getCurrentParkingStatus(locationCode){
   
-   var compareTime = moment().utcOffset("+05:30").startOf('day').unix();
+   var compareTime =moment.unix(moment().utcOffset("+05:30").unix()).startOf('day').unix();
     
    var params = {};
    params.TableName = statusTableName;
@@ -17,25 +17,22 @@ function getCurrentParkingStatus(locationCode){
 	
    return dynamo.getItemAsync(params).then(function(dataDb){
 	    
-	    if(dataDb.Item){
-	        
-    	    return configService.getSlotConfiguration({"locationCode":locationCode}).then(function (totalSlotsData){
+    	return configService.getSlotConfiguration({"locationCode":locationCode}).then(function (totalSlotsData){
     	    
-    	    var currentTotalSlots =(totalSlotsData && totalSlotsData.totalSlots)? totalSlotsData.totalSlots : null;
-    	    
-        	    if (currentTotalSlots) {
-        				
-        				var currentStatus = dataDb.Item;
-        				
-        				currentStatus.availableSlots = currentTotalSlots - ((currentStatus.booked)?currentStatus.booked:0 )- ((currentStatus.parked)?currentStatus.parked:0 );
-        				
-        				return currentStatus;
-        		}
-        			
-            	return null;
-            });
-	    }
-	    return null;
+        	var currentTotalSlots =(totalSlotsData && totalSlotsData.totalSlots)? totalSlotsData.totalSlots : null;
+        	    
+    	    if (currentTotalSlots) {
+    				
+    				var currentStatus = (dataDb.Item) ? dataDb.Item : {} ;
+    				
+    				currentStatus.availableSlots = currentTotalSlots - ((currentStatus.booked)?currentStatus.booked:0 )- ((currentStatus.parked)?currentStatus.parked:0 );
+    				
+    				return currentStatus;
+    		}
+            			
+        	return null;
+        });
+	   
     });
 }
 

@@ -73,6 +73,9 @@ function updateStatus(newData, oldData){
             dataToBeUpdated[newData.status.S] = 1;
         }
         
+        console.log("dataToBeUpdated")
+        console.log(dataToBeUpdated)
+        
         var paramPut = {};
         paramPut.TableName = liveStatusTableName;
         paramPut.Item = dataToBeUpdated;

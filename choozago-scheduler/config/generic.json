@@ -1,0 +1,4 @@
+{
+	"dateDisplayFormat" : "ddd, MMM DD YYYY, h:mm a",
+	"qrScanUrlTemplate" : "http://choozago.com/#/ParkCar/{ticketId}"
+}

@@ -8,8 +8,9 @@
 			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-parked.png",
 			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-exited.png",
 			"cancelled" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-cancelled.png",
+			"expired" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ticketExpired.PNG",
 			"ticketExpiryInHours" : 2,
-			"ticketAutoExitInHours" : 8
+			"ticketAutoExitInHours" : 9
 		},
 		{
 			"code": "ggn-7b",
@@ -19,8 +20,9 @@
 			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-parked.png",
 			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-exited.png",
 			"cancelled" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-cancelled.png",
+			"expired" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ticketExpired.PNG",
 			"ticketExpiryInHours" : 2,
-			"ticketAutoExitInHours" : 8
+			"ticketAutoExitInHours" : 9
 		},
 		{
 			"code": "del-sp",
@@ -30,8 +32,9 @@
 			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-parked.png",
 			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-exited.png",
 			"cancelled" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-cancelled.png",
+			"expired" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ticketExpired.PNG",
 			"ticketExpiryInHours" : 2,
-			"ticketAutoExitInHours" : 8
+			"ticketAutoExitInHours" : 9
 		}
 	]
 }

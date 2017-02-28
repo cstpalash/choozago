@@ -97,7 +97,7 @@ function getTicketCard(ticketData){
 	switch(ticketData.status)
 	{
 		case "expired" : 
-			ticketTime = moment.unix(ticketData.expiry).utcOffset("+05:30").format(genericConfig.dateDisplayFormat);
+			ticketTime = moment.unix(ticketData.expiredtime).utcOffset("+05:30").format(genericConfig.dateDisplayFormat);
 			ticketTitle = "Expired : " + ticketTime
 			image = loc.expired;
 			break;
@@ -127,10 +127,13 @@ function getTicketCard(ticketData){
 	ticketDesc = ticketDesc.replace("{status}", ticketData.status)
 										.replace("{firstName}", ticketData.firstName)
 										.replace("{lastName}", ticketData.lastName);
+										
+	if(ticketData.status == 'expired')
+		ticketDesc = "expired by Choozago on " + ticketTime;
 	
 	generic
 		.addBubble(format(ticketTitle), format(ticketDesc))
-		.addImage(image)
+		.addImage(image);
 		
 	if ((ticketData.status == "booked")) {
 		generic
@@ -140,6 +143,10 @@ function getTicketCard(ticketData){
 	else if ((ticketData.status == "parked")) {
 		generic
 			.addButton('Exit ticket', '#exit|' + ticketData.ticketid);
+	}
+	else{
+		generic
+			.addButton('Start again', '#start');
 	}
 	
 	return generic.get();

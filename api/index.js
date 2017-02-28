@@ -45,12 +45,15 @@ exports.handler = function (event, context) {
 		case "parkTicket" : 
 			getTicketStatus(event.data.ticketId).then(function(ticket){
 				if(ticket.status == "booked"){
+					var loc = _.find(getLocations(ticket.company), function(l) { return l.code == ticket.locationCode; });
+					var autoExitTime = now.clone().add(loc.ticketAutoExitInHours, 'h');
 					ticket.status = "parked";
 					ticket.parkedtime = now.unix();
+					ticket.expiry = autoExitTime.unix(); //auto expiry
 					updateTicket(ticket).then(function(d){
-						var loc = _.find(getLocations(ticket.company), function(l) { return l.code == ticket.locationCode; });
+						
 						//notify user
-						var ticketTitle = "Auto exit : " + now.clone().add(loc.ticketAutoExitInHours, 'h').format(genericConfig.dateDisplayFormat);
+						var ticketTitle = "Auto exit : " + autoExitTime.format(genericConfig.dateDisplayFormat);
 		
 
 						var ticketDesc = "{status} by {firstName} {lastName} on " + now.format(genericConfig.dateDisplayFormat);

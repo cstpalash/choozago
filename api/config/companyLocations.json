@@ -8,7 +8,7 @@
 			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-parked.png",
 			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-exited.png",
 			"cancelled" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-cancelled.png",
-			"expired" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ticketExpired.PNG",
+			"expired" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-infospace-expired.png",
 			"ticketExpiryInHours" : 2,
 			"ticketAutoExitInHours" : 9
 		},
@@ -20,7 +20,7 @@
 			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-parked.png",
 			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-exited.png",
 			"cancelled" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-cancelled.png",
-			"expired" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ticketExpired.PNG",
+			"expired" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ggn-7b-expired.png",
 			"ticketExpiryInHours" : 2,
 			"ticketAutoExitInHours" : 9
 		},
@@ -32,7 +32,7 @@
 			"parked" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-parked.png",
 			"exited" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-exited.png",
 			"cancelled" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-cancelled.png",
-			"expired" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/ticketExpired.PNG",
+			"expired" : "http://choozago.com.s3-website-ap-northeast-1.amazonaws.com/del-sp-expired.png",
 			"ticketExpiryInHours" : 2,
 			"ticketAutoExitInHours" : 9
 		}
